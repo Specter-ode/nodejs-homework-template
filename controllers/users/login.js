@@ -2,7 +2,7 @@ const { User, usersJoiSchemas } = require("../../models");
 const { RequestError } = require("../../helpers");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { SECRET_KEY } = process.env;
+const { JWT_SECRET_KEY } = process.env;
 
 const login = async (req, res, next) => {
   try {
@@ -21,7 +21,8 @@ const login = async (req, res, next) => {
     const payload = {
       id: userOnLogin._id,
     };
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1d" });
+    const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "1d" });
+    console.log("token: ", token);
     await User.findByIdAndUpdate(userOnLogin._id, { token });
     res.json(token);
   } catch (error) {
